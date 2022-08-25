@@ -2,6 +2,7 @@
 using HotelVillaAPI.Data;
 using HotelVillaAPI.Models;
 using HotelVillaAPI.Models.Dto;
+using HotelVillaAPI.Repository.IRepository;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,13 +14,13 @@ namespace HotelVillaAPI.Controllers
     [Route("api/VillaAPI")]
     [ApiController]
     public class VillaAPIController : ControllerBase
-    {
-        private readonly ApplicationDbContext _db;
+    { 
+        private readonly IVillaRepository _dbVilla;
         private readonly IMapper _mapper;
 
-        public VillaAPIController(ApplicationDbContext db, IMapper mapper)
+        public VillaAPIController(IVillaRepository dbVilla, IMapper mapper)
         {
-            _db = db;
+            _dbVilla = dbVilla;
             _mapper = mapper;
         }
 
@@ -27,7 +28,7 @@ namespace HotelVillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<VillaDTO>>> GetVillas()
         {
-            IEnumerable<Villa> villaList = await _db.Villas.ToListAsync();
+            IEnumerable<Villa> villaList = await _dbVilla.GetAllAsync();
             return Ok(_mapper.Map<List<VillaDTO>>(villaList));
         }
 
@@ -42,7 +43,7 @@ namespace HotelVillaAPI.Controllers
                 
                 return BadRequest();
             }
-            var villa = await _db.Villas.FirstOrDefaultAsync(u => u.Id == id);
+            var villa = await _dbVilla.GetAsync(u => u.Id == id);
 
             if (villa == null)
             {
@@ -63,7 +64,7 @@ namespace HotelVillaAPI.Controllers
             //    return BadRequest(ModelState);
             //}
 
-            if (await _db.Villas.FirstOrDefaultAsync(u => u.Name.ToLower() == createDTO.Name.ToLower()) != null)
+            if (await _dbVilla.GetAsync(u => u.Name.ToLower() == createDTO.Name.ToLower()) != null)
             {
                 ModelState.AddModelError("Custom Error", "Villa already Exists!");
                 return BadRequest(ModelState);
@@ -76,8 +77,7 @@ namespace HotelVillaAPI.Controllers
             Villa model = _mapper.Map<Villa>(createDTO);
 
            
-           await _db.Villas.AddAsync(model);
-           await _db.SaveChangesAsync();
+           await _dbVilla.CreateAsync(model);
 
             //Created at route will return a 201 code instead of OK will return a 200 it will also give you the location of the newly created villa URL
             //EF core will populate the newly created villa with an Id
@@ -95,14 +95,14 @@ namespace HotelVillaAPI.Controllers
             {
                 return BadRequest();
             }
-            var villa = await _db.Villas.FirstOrDefaultAsync(u => u.Id == id);
+            var villa = await _dbVilla.GetAsync(u => u.Id == id);
 
             if (villa == null)
             {
                 return NotFound();
             }
-            _db.Villas.Remove(villa);
-           await _db.SaveChangesAsync();
+           await _dbVilla.RemoveAsync(villa);
+           
 
             return NoContent();
 
@@ -120,8 +120,7 @@ namespace HotelVillaAPI.Controllers
 
            Villa model = _mapper.Map<Villa>(updateDTO);
 
-            _db.Villas.Update(model);
-            await _db.SaveChangesAsync();
+            await _dbVilla.UpdateAsync(model);
             return NoContent();
         }
 
@@ -137,7 +136,7 @@ namespace HotelVillaAPI.Controllers
 
             //We have to add in this no tracking otherwise entity framework is trying to track two villas with the same id 
             // and that will result in an error
-            var villa = await _db.Villas.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+            var villa = await _dbVilla.GetAsync(u => u.Id == id, tracked:false);
 
             //have to convert to call the patchDTO
             VillaUpdateDTO villaDTO = _mapper.Map<VillaUpdateDTO>(villa);
@@ -152,15 +151,13 @@ namespace HotelVillaAPI.Controllers
             //have to convert back to update
             Villa model = _mapper.Map<Villa>(villaDTO);
 
-            _db.Villas.Update(model);
-            await _db.SaveChangesAsync();
+            await _dbVilla.UpdateAsync(model);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             return NoContent();
         }
-
-
     }
 }
