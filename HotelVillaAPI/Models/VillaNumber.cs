@@ -9,6 +9,8 @@ namespace HotelVillaAPI.Models
         //from generating it for us like it would do with a regular primary key 
         [Key,DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int VillaNo { get; set; }
+        [ForeignKey("Villa")]
+        public int VillaID { get; set; }
         public string SpecialDetails { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
