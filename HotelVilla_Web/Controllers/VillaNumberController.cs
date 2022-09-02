@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HotelVilla_Web.Models;
 using HotelVilla_Web.Models.Dto;
+using HotelVilla_Web.Services;
 using HotelVilla_Web.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -9,24 +10,24 @@ using System.Reflection;
 
 namespace HotelVilla_Web.Controllers
 {
-    public class VillaController : Controller
+    public class VillaNumberController : Controller
     {
-        private readonly IVillaService _villaService;
+        private readonly IVillaNumberService _villaNumberService;
         private readonly IMapper _mapper;
 
-        public VillaController(IVillaService villaService,IMapper mapper)
+        public VillaNumberController(IVillaNumberService villaNumberService, IMapper mapper)
         {
-            _villaService = villaService;
+            _villaNumberService = villaNumberService;
             _mapper = mapper;
         }
-        public async Task<IActionResult> IndexVilla()
+        public async Task<IActionResult> IndexVillaNumber()
         {
-            List<VillaDTO> list = new();
+            List<VillaNumberDTO> list = new();
 
-            var response = await _villaService.GetAllAsync<APIResponse>();
+            var response = await _villaNumberService.GetAllAsync<APIResponse>();
             if(response != null && response.IsSuccess)
             {
-                list = JsonConvert.DeserializeObject <List<VillaDTO>>(Convert.ToString(response.Result));
+                list = JsonConvert.DeserializeObject <List<VillaNumberDTO>>(Convert.ToString(response.Result));
             }
             return View(list);
         }
