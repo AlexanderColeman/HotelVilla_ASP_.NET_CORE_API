@@ -93,13 +93,13 @@ namespace HotelVillaAPI.Controllers
             {
                 if (await _dbVillaNumber.GetAsync(u => u.VillaNo == createDTO.VillaNo) != null)
                 {
-                    ModelState.AddModelError("Custom Error", "Villa Number already Exists!");
+                    ModelState.AddModelError("ErrorMessages", "Villa Number already Exists!");
                     return BadRequest(ModelState);
                 }
 
                 if(await _dbVilla.GetAsync(u => u.Id == createDTO.VillaID) == null)
                 {
-                    ModelState.AddModelError("Custom Error", "Villa ID is Invalid!");
+                    ModelState.AddModelError("ErrorMessages", "Villa ID is Invalid!");
                     return BadRequest(ModelState);
                 }
 
@@ -163,8 +163,6 @@ namespace HotelVillaAPI.Controllers
                 _response.ErrorMessages = new List<string>() { ex.ToString() };
             }
             return _response;
-
-
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -182,7 +180,7 @@ namespace HotelVillaAPI.Controllers
                 }
                 if (await _dbVilla.GetAsync(u => u.Id == updateDTO.VillaID) == null)
                 {
-                    ModelState.AddModelError("Custom Error", "Villa ID is Invalid!");
+                    ModelState.AddModelError("ErrorMessages", "Villa ID is Invalid!");
                     return BadRequest(ModelState);
                 }
 

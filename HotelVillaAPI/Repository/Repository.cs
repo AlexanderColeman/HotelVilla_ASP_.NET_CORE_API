@@ -14,7 +14,6 @@ namespace HotelVillaAPI.Repository
         public Repository(ApplicationDbContext db, DbSet<T> dbSet = null)
         {
             _db = db;
-            _db.VillaNumbers.Include(u => u.Villa).ToList();
             this.dbSet = db.Set<T>();
         }
         public async Task CreateAsync(T entity)
