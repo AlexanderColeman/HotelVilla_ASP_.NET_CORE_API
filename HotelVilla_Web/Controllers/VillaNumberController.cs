@@ -61,6 +61,7 @@ namespace HotelVilla_Web.Controllers
                 var response = await _villaNumberService.CreateAsync<APIResponse>(model.VillaNumber);
                 if (response != null && response.IsSuccess)
                 {
+                    TempData["success"] = "Villa number created successfully";
                     return RedirectToAction(nameof(IndexVillaNumber));
                 }
                 else
@@ -82,6 +83,7 @@ namespace HotelVilla_Web.Controllers
                         Value = i.Id.ToString(),
                     });
             }
+            TempData["error"] = "Error encountered";
             return View(model);
         }
 
@@ -120,6 +122,7 @@ namespace HotelVilla_Web.Controllers
                 var response = await _villaNumberService.UpdateAsync<APIResponse>(model.VillaNumber);
                 if (response != null && response.IsSuccess)
                 {
+                    TempData["success"] = "Villa number updated successfully";
                     return RedirectToAction(nameof(IndexVillaNumber));
                 }
                 else
@@ -141,6 +144,7 @@ namespace HotelVilla_Web.Controllers
                         Value = i.Id.ToString(),
                     });
             }
+            TempData["error"] = "Error encountered";
             return View(model);
         }
 
@@ -173,10 +177,12 @@ namespace HotelVilla_Web.Controllers
         public async Task<IActionResult> DeleteVillaNumber(VillaNumberDeleteVM model)
         {
                 var response = await _villaNumberService.DeleteAsync<APIResponse>(model.VillaNumber.VillaNo);
-                if (response != null && response.IsSuccess)
-                {
-                    return RedirectToAction(nameof(IndexVillaNumber));
-                }
+            if (response != null && response.IsSuccess)
+            {
+                TempData["success"] = "Villa number deleted successfully";
+                return RedirectToAction(nameof(IndexVillaNumber));
+            }
+            TempData["error"] = "Error encountered";
             return View(model);
         }
     }
