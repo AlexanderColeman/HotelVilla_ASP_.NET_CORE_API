@@ -26,7 +26,7 @@ namespace HotelVilla_Web.Services
             });
         }
 
-		public Task<T> RegisterAsync<T>(UserDTO obj)
+		public Task<T> RegisterAsync<T>(RegistrationRequestDTO obj)
 		{
             return SendAsync<T>(new APIRequest()
             {

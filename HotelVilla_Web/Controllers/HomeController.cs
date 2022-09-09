@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HotelVilla_Utility;
 using HotelVilla_Web.Models;
 using HotelVilla_Web.Models.Dto;
 using HotelVilla_Web.Services.IServices;
@@ -22,7 +23,7 @@ namespace HotelVilla_Web.Controllers
         {
             List<VillaDTO> list = new();
 
-            var response = await _villaService.GetAllAsync<APIResponse>();
+            var response = await _villaService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SessionToken));
             if (response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<VillaDTO>>(Convert.ToString(response.Result));
