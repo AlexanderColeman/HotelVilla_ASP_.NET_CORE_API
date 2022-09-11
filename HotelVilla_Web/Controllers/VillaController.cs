@@ -32,15 +32,17 @@ namespace HotelVilla_Web.Controllers
             }
             return View(list);
         }
+
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateVilla()
         {
             return View();
         }
 
-        [Authorize(Roles = "admin")]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateVilla(VillaCreateDTO model)
         {
             if (ModelState.IsValid)
@@ -55,6 +57,7 @@ namespace HotelVilla_Web.Controllers
             TempData["error"] = "Error encountered";
             return View(model);
         }
+
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> UpdateVilla(int villaId)
         {
@@ -66,9 +69,11 @@ namespace HotelVilla_Web.Controllers
             }
             return NotFound();
         }
-        [Authorize(Roles = "admin")]
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> UpdateVilla(VillaUpdateDTO model)
         {
             if (ModelState.IsValid)
@@ -96,9 +101,10 @@ namespace HotelVilla_Web.Controllers
             return NotFound();
         }
 
-        [Authorize(Roles = "admin")]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteVilla(VillaDTO model)
         {
                 var response = await _villaService.DeleteAsync<APIResponse>(model.Id, HttpContext.Session.GetString(SD.SessionToken));

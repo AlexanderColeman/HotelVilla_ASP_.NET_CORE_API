@@ -57,9 +57,10 @@ namespace HotelVilla_Web.Controllers
             return View(villaNumberVM);
         }
 
-        [Authorize(Roles = "admin")]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateVillaNumber(VillaNumberCreateVM model)
         {
             if (ModelState.IsValid)

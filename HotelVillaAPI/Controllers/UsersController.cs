@@ -6,11 +6,12 @@ using System.Net;
 
 namespace HotelVillaAPI.Controllers
 {
-    [Route("api/UsersAuth")]
+    [Route("api/v{version:apiVersion}/UsersAuth")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class UsersController : Controller
-	{
-		private readonly IUserRepository _userRepo;
+    {
+        private readonly IUserRepository _userRepo;
         protected APIResponse _response;
 
         public UsersController(IUserRepository userRepo)
@@ -21,10 +22,10 @@ namespace HotelVillaAPI.Controllers
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO model)
-		{
+        {
             var loginResponse = await _userRepo.Login(model);
 
-            if(loginResponse.User == null || string.IsNullOrEmpty(loginResponse.Token))
+            if (loginResponse.User == null || string.IsNullOrEmpty(loginResponse.Token))
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
@@ -34,9 +35,9 @@ namespace HotelVillaAPI.Controllers
             }
             _response.StatusCode = HttpStatusCode.OK;
             _response.IsSuccess = true;
-            _response.Result= loginResponse;
+            _response.Result = loginResponse;
             return Ok(_response);
-		}
+        }
 
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] RegistrationRequestDTO model)
@@ -52,7 +53,7 @@ namespace HotelVillaAPI.Controllers
 
             var user = await _userRepo.Register(model);
 
-            if(user == null)
+            if (user == null)
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
@@ -62,7 +63,7 @@ namespace HotelVillaAPI.Controllers
             _response.StatusCode = HttpStatusCode.OK;
             _response.IsSuccess = true;
             return Ok(_response);
-            
+
         }
     }
 }

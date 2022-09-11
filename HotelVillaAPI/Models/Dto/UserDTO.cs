@@ -1,10 +1,9 @@
-﻿namespace HotelVilla_Web.Models.Dto
+﻿namespace HotelVillaAPI.Models.Dto
 {
-	public class UserDTO
-	{
+    public class UserDTO
+    {
         public string Id { get; set; }
         public string UserName { get; set; }
         public string Name { get; set; }
-        public string Password { get; set; }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using HotelVillaAPI.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelVillaAPI.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         private readonly DbContextOptions<ApplicationDbContext> _options;
 
@@ -11,6 +12,9 @@ namespace HotelVillaAPI.Data
         {
             _options = options;
         }
+
+
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Villa> Villas { get; set; }
         public DbSet<LocalUser> LocalUsers { get; set; }
         public DbSet<VillaNumber> VillaNumbers { get; set; }
@@ -18,6 +22,7 @@ namespace HotelVillaAPI.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Villa>().HasData(
                 new Villa
                 {
