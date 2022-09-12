@@ -63,6 +63,7 @@ namespace HotelVillaAPI.Controllers.v1
                 if (id == 0)
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
                     return BadRequest(_response);
                 }
                 var villaNumber = await _dbVillaNumber.GetAsync(u => u.VillaNo == id);
@@ -70,6 +71,7 @@ namespace HotelVillaAPI.Controllers.v1
                 if (villaNumber == null)
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.IsSuccess = false;
                     return NotFound(_response);
                 }
 
@@ -98,17 +100,20 @@ namespace HotelVillaAPI.Controllers.v1
                 if (await _dbVillaNumber.GetAsync(u => u.VillaNo == createDTO.VillaNo) != null)
                 {
                     ModelState.AddModelError("ErrorMessages", "Villa Number already Exists!");
+                    _response.IsSuccess = false;
                     return BadRequest(ModelState);
                 }
 
                 if (await _dbVilla.GetAsync(u => u.Id == createDTO.VillaID) == null)
                 {
                     ModelState.AddModelError("ErrorMessages", "Villa ID is Invalid!");
+                    _response.IsSuccess = false;
                     return BadRequest(ModelState);
                 }
 
                 if (createDTO == null)
                 {
+                    _response.IsSuccess = false;
                     return BadRequest(createDTO);
                 }
                 VillaNumber VillaNumber = _mapper.Map<VillaNumber>(createDTO);
@@ -145,6 +150,7 @@ namespace HotelVillaAPI.Controllers.v1
             {
                 if (id == 0)
                 {
+                    _response.IsSuccess = false;
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     return BadRequest(_response);
                 }
@@ -152,6 +158,7 @@ namespace HotelVillaAPI.Controllers.v1
 
                 if (villaNumber == null)
                 {
+                    _response.IsSuccess = false;
                     _response.StatusCode = HttpStatusCode.NotFound;
                     return NotFound(_response);
                 }
@@ -181,11 +188,13 @@ namespace HotelVillaAPI.Controllers.v1
             {
                 if (updateDTO == null || id != updateDTO.VillaNo)
                 {
+                    _response.IsSuccess = false;
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     return BadRequest(_response);
                 }
                 if (await _dbVilla.GetAsync(u => u.Id == updateDTO.VillaID) == null)
                 {
+                    _response.IsSuccess = false;
                     ModelState.AddModelError("ErrorMessages", "Villa ID is Invalid!");
                     return BadRequest(ModelState);
                 }
